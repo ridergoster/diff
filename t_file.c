@@ -6,11 +6,11 @@
 t_file* file_create(char* file_name){
 
     // Alloc memory for the file
-  	t_file* file = (t_file*)malloc(sizeof(t_file));
+    t_file* file = (t_file*)malloc(sizeof(t_file));
 
     // init variable
-  	FILE* f_file;
-  	int nb_line = 1;
+    FILE* f_file;
+    int nb_line = 1;
     int char_ascii = 0;
     int nb_char = 0;
     int i;
@@ -64,8 +64,8 @@ t_file* file_create(char* file_name){
 
         // Got back to init
         fseek(f_file,0,SEEK_SET);
-    		nb_char = 0;
-    		nb_line = 0;
+        nb_char = 0;
+        nb_line = 0;
 
         // Get the every char of the txt in the t_file
         while((char_ascii=fgetc(f_file))!= EOF){
@@ -79,24 +79,24 @@ t_file* file_create(char* file_name){
 
         // Work is done, close the file !
         fclose(f_file);
-  	}
+    }
     // return the t_file created
-  	return file;
+    return file;
 }
 
 //Print the t_file
 void file_print(t_file* file){
     //init variable
-  	int i = 0;
-  	int j = 0;
+    int i = 0;
+    int j = 0;
 
     //Print each line
-  	for(; i < file->nb_line;i++){
+    for(; i < file->nb_line;i++){
         //Print each char
         for(j=0; j < file->size_line[i];j++){
             printf("%c",file->lines[i][j]);
         }
-  	}
+    }
 }
 
 //Return a line of file at index
