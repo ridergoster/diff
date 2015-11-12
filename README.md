@@ -24,15 +24,16 @@ _______________________
 
 -y, --side-by-side output in two columns
 
--W, --width=NUM output at most NUM (default 130) print columns
-
--N, --new-file treat absent files as empty
-
 -i, --ignore-case ignore case differences in file contents
 
 -w, --ignore-all-space ignore all white space
 
+-a, --text treat all files as text
+
+-W, --width=NUM output at most NUM (default 130) print columns
+
+-N, --new-file treat absent files as empty
+
 -B, --ignore-blank-lines ignore changes whose lines are all blank
 
--a, --text treat all files as text
 _____________________
