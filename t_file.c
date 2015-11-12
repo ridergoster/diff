@@ -100,6 +100,6 @@ void file_print(t_file* file){
 }
 
 //Return a line of file at index
-char* get_line(t_file* f_file,int index){
-    return f_file[index];
+char* get_line(t_file* file,int index){
+    return file->lines[index];
 }
