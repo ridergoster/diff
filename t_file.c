@@ -1,4 +1,4 @@
- #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "t_file.h"
 
@@ -24,21 +24,21 @@ t_file* file_create(char* file_name){
                 nb_line++;
         }
 
-    	  // alloc the number of line
-    		file->size_line = (int*)malloc(sizeof(int)*nb_line);
+        // alloc the number of line
+        file->size_line = (int*)malloc(sizeof(int)*nb_line);
 
         // Initialize the number of line in t_file
-    		file->nb_line = nb_line;
+        file->nb_line = nb_line;
 
-    		// Initialize the size of each line at 0 in t_file
-    		for(i = 0;i < nb_line; i++){
-    		    file->size_line[i] = 0;
-    		}
+        // Initialize the size of each line at 0 in t_file
+        for(i = 0;i < nb_line; i++){
+            file->size_line[i] = 0;
+        }
 
-    		// Got back to init
-    		fseek(f_file,0,SEEK_SET);
-    		nb_char = 0;
-    		nb_line = 0;
+        // Got back to init
+        fseek(f_file,0,SEEK_SET);
+        nb_char = 0;
+        nb_line = 0;
 
         // Get the size of each line in t_file
         while((char_ascii=fgetc(f_file))!= EOF){
@@ -60,10 +60,10 @@ t_file* file_create(char* file_name){
         }
 
         // Put the lines object in the t_file
-    	  file->lines = lines;
+        file->lines = lines;
 
-    	  // Got back to init
-    		fseek(f_file,0,SEEK_SET);
+        // Got back to init
+        fseek(f_file,0,SEEK_SET);
     		nb_char = 0;
     		nb_line = 0;
 
@@ -78,7 +78,7 @@ t_file* file_create(char* file_name){
         }
 
         // Work is done, close the file !
-    	  fclose(f_file);
+        fclose(f_file);
   	}
     // return the t_file created
   	return file;
@@ -93,8 +93,13 @@ void file_print(t_file* file){
     //Print each line
   	for(; i < file->nb_line;i++){
         //Print each char
-    		for(j=0; j < file->size_line[i];j++){
-      			printf("%c",file->lines[i][j]);
-    		}
+        for(j=0; j < file->size_line[i];j++){
+            printf("%c",file->lines[i][j]);
+        }
   	}
+}
+
+//Return a line of file at index
+char* get_line(t_file* f_file,int index){
+    return f_file[index];
 }
