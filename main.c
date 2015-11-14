@@ -46,19 +46,17 @@ int main(int argc, char** argv)
 
     //file_print(file_1);
 
-    int option_q=0;
-    int option_s=0;
-    int option_i=0;
-    int option_w=0;
+    int option_q=0; //report if diff
+    int option_s=0; //report identical file
+    int option_i=0; //ignore different case
+    int option_w=0; // ignore all space
 
     int k;
-    int cpt = 0; //total number of options
     for(k=1; k<argc; k++)
     {
         if(strcmp(argv[k], "-i") == 0 || strcmp(argv[k], "--ignore-case") == 0)
         {
             option_i = 1;
-            cpt++;
         }
         if(strcmp(argv[k], "--help") == 0)
         {
@@ -68,35 +66,36 @@ int main(int argc, char** argv)
         if(strcmp(argv[k], "-w") == 0 || strcmp(argv[k], "--ignore-all-space") == 0)
         {
             option_w = 1;
-            cpt++;
         }
         if(strcmp(argv[k], "-s") == 0 || strcmp(argv[k], "--report-identical-files") == 0)
         {
             option_s = 1;
-            cpt++;
         }
         if(strcmp(argv[k], "-q") == 0  || strcmp(argv[k], "--brief") == 0)
         {
             option_q = 1;
-            cpt++;
         }
     }
 
 if(1==option_i)
 {
-
+    file_1 = to_lower_case(file_1);
+    file_2 = to_lower_case(file_2);
 }
 if(1==option_q)
 {
-
+    if(1==is_file_different(file_1,file_2))
+        printf("same");
 }
 if(1==option_s)
 {
-
+   if(is_file_different(file_1,file_2))
+        printf("same");
 }
 if(1==option_w)
 {
-
+   file_1=str_ignore_blank(file_1);
+   file_2=str_ignore_blank(file_2);
 }
 
 

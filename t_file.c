@@ -131,6 +131,7 @@ t_file * to_lower_case(t_file* file)
     }
 return new_file;
 }
+
 int is_file_different(t_file * file1, t_file * file2)
 {
     if(file1 && file2)
