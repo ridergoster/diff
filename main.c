@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "t_file.h"
+#include <string.h>
 
 int main(int argc, char** argv)
 {
@@ -39,6 +40,7 @@ int main(int argc, char** argv)
     t_file* file_1 = file_create(argv[index_file_1]);
 
     t_file* file_2 = file_create(argv[index_file_2]);
+
 
     //printf("Line 3 : \n%s\n",get_line(file_1,2));
 
@@ -80,5 +82,25 @@ int main(int argc, char** argv)
         }
     }
 
-    return 0;
+if(1==option_i)
+{
+
+}
+if(1==option_q)
+{
+
+}
+if(1==option_s)
+{
+
+}
+if(1==option_w)
+{
+
+}
+
+
+ free(file_1);
+ free(file_2);
+ return 0;
 }

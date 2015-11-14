@@ -115,9 +115,10 @@ void file_print(t_file* file)
 
 t_file * to_lower_case(t_file* file)
 {
+    t_file* new_file;
     if(file)
     {
-        t_file* new_file = file;
+        new_file = file;
         int i;
         for(; i < file->nb_line; i++)
         {
@@ -127,15 +128,24 @@ t_file * to_lower_case(t_file* file)
                 new_file->lines[i][j] = tolower(file->lines[i][j]);
             }
         }
-        return new_file;
     }
+return new_file;
 }
-int * is_file_different(t_file * file1, t_file * file2)
+int is_file_different(t_file * file1, t_file * file2)
 {
     if(file1 && file2)
     {
+        //compare the number of line
         if(file1->nb_line!=file2->nb_line)
             return 1;
+        //compare the number of char for a line
+        int z,y;
+        for(z=0;z<file1->nb_line;z++)
+            for(y=0;file2->nb_line;y++)
+            {
+                if(file1->size_line[z]!=file2->size_line[y])
+                    return 1;
+            }
 
         int i;
         for(i=0; i < file1->nb_line; i++)
@@ -155,10 +165,10 @@ return 0;
 
 t_file* str_ignore_blank(t_file * file)
 {
-
+    t_file* new_file;
     if (file != NULL)
     {
-        t_file* new_file = file;
+        new_file = file;
         if (new_file != NULL)
         {
             int i;
@@ -167,13 +177,13 @@ t_file* str_ignore_blank(t_file * file)
                 int j;
                 for(j=0; j < file->size_line[i]; j++)
                 {
-                    if(file->lines[i][j]=' ')
+                    if((file->lines[i][j]=' '))
                         new_file->lines[i][j]=file->lines[i][j];
                 }
             }
         }
-        return new_file;
-    }
+     }
+  return new_file;
 }
 
 
