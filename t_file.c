@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "t_file.h"
+#include <ctype.h>
 
 // Create a t_file object from a .txt file
-t_file* file_create(char* file_name){
+t_file* file_create(char* file_name)
+{
 
     // Alloc memory for the file
     t_file* file = (t_file*)malloc(sizeof(t_file));
@@ -16,10 +18,12 @@ t_file* file_create(char* file_name){
     int i;
 
     // if file is readable -> we can work !
-    if ((f_file = fopen(file_name,"r"))) {
+    if ((f_file = fopen(file_name,"r")))
+    {
 
         // get the number of line
-        while((char_ascii=fgetc(f_file))!= EOF){
+        while((char_ascii=fgetc(f_file))!= EOF)
+        {
             if(char_ascii==10)
                 nb_line++;
         }
@@ -31,7 +35,8 @@ t_file* file_create(char* file_name){
         file->nb_line = nb_line;
 
         // Initialize the size of each line at 0 in t_file
-        for(i = 0;i < nb_line; i++){
+        for(i = 0; i < nb_line; i++)
+        {
             file->size_line[i] = 0;
         }
 
@@ -41,10 +46,12 @@ t_file* file_create(char* file_name){
         nb_line = 0;
 
         // Get the size of each line in t_file
-        while((char_ascii=fgetc(f_file))!= EOF){
+        while((char_ascii=fgetc(f_file))!= EOF)
+        {
             nb_char++;
             file->size_line[nb_line] = nb_char;
-            if(char_ascii==10){
+            if(char_ascii==10)
+            {
                 nb_line++;
                 nb_char = 0;
             }
@@ -53,8 +60,10 @@ t_file* file_create(char* file_name){
         // Alloc the number of line in the lines object
         char** lines = (char **)malloc(sizeof(char*)*(nb_line+1));
 
+        int i;
         // Alloc each line in the lines object
-        for(int i = 0 ; i < nb_line+1 ; i++){
+        for(i = 0 ; i < nb_line+1 ; i++)
+        {
             char* line = (char *)malloc(sizeof(char)*file->size_line[i]*(nb_line+1));
             lines[i] = &line[i*file->size_line[i]];
         }
@@ -68,10 +77,12 @@ t_file* file_create(char* file_name){
         nb_line = 0;
 
         // Get the every char of the txt in the t_file
-        while((char_ascii=fgetc(f_file))!= EOF){
+        while((char_ascii=fgetc(f_file))!= EOF)
+        {
             file->lines[nb_line][nb_char] = char_ascii;
             nb_char++;
-            if(char_ascii==10){
+            if(char_ascii==10)
+            {
                 nb_char = 0;
                 nb_line++;
             }
@@ -85,21 +96,89 @@ t_file* file_create(char* file_name){
 }
 
 //Print the t_file
-void file_print(t_file* file){
+void file_print(t_file* file)
+{
     //init variable
     int i = 0;
     int j = 0;
 
     //Print each line
-    for(; i < file->nb_line;i++){
+    for(; i < file->nb_line; i++)
+    {
         //Print each char
-        for(j=0; j < file->size_line[i];j++){
+        for(j=0; j < file->size_line[i]; j++)
+        {
             printf("%c",file->lines[i][j]);
         }
     }
 }
 
+t_file * to_lower_case(t_file* file)
+{
+    if(file)
+    {
+        t_file* new_file = file;
+        int i;
+        for(; i < file->nb_line; i++)
+        {
+            int j;
+            for(j=0; j < file->size_line[i]; j++)
+            {
+                new_file->lines[i][j] = tolower(file->lines[i][j]);
+            }
+        }
+        return new_file;
+    }
+}
+int * is_file_different(t_file * file1, t_file * file2)
+{
+    if(file1 && file2)
+    {
+        if(file1->nb_line!=file2->nb_line)
+            return 1;
+
+        int i;
+        for(i=0; i < file1->nb_line; i++)
+        {
+            int j;
+            for(j=0; j < file1->size_line[i]; j++)
+            {
+                if(file1->lines[i][j]!= file2->lines[i][j])
+                {
+                    return 1;
+                }
+            }
+        }
+    }
+return 0;
+}
+
+t_file* str_ignore_blank(t_file * file)
+{
+
+    if (file != NULL)
+    {
+        t_file* new_file = file;
+        if (new_file != NULL)
+        {
+            int i;
+            for(; i < file->nb_line; i++)
+            {
+                int j;
+                for(j=0; j < file->size_line[i]; j++)
+                {
+                    if(file->lines[i][j]=' ')
+                        new_file->lines[i][j]=file->lines[i][j];
+                }
+            }
+        }
+        return new_file;
+    }
+}
+
+
 //Return a line of file at index
-char* get_line(t_file* file,int index){
+char* get_line(t_file* file,int index)
+{
     return file->lines[index];
 }
