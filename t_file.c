@@ -101,7 +101,7 @@ void file_print(t_file* file)
     //init variable
     int i = 0;
     int j = 0;
-
+    printf("\n------- PRINT FILE -------\n\n");
     //Print each line
     for(; i < file->nb_line; i++)
     {
@@ -111,25 +111,24 @@ void file_print(t_file* file)
             printf("%c",file->lines[i][j]);
         }
     }
+    printf("\n------- END FILE -------\n");
 }
 
 t_file * to_lower_case(t_file* file)
 {
-    t_file* new_file;
     if(file)
     {
-        new_file = file;
         int i;
         for(; i < file->nb_line; i++)
         {
             int j;
             for(j=0; j < file->size_line[i]; j++)
             {
-                new_file->lines[i][j] = tolower(file->lines[i][j]);
+                file->lines[i][j] = tolower(file->lines[i][j]);
             }
         }
     }
-return new_file;
+return file;
 }
 
 int is_file_different(t_file * file1, t_file * file2)
