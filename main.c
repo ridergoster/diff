@@ -77,29 +77,67 @@ int main(int argc, char** argv)
         }
     }
 
-if(1==option_i)
-{
-    file_1 = to_lower_case(file_1);
-    file_2 = to_lower_case(file_2);
-}
-if(1==option_q)
-{
-    if(1==is_file_different(file_1,file_2))
-        printf("same");
-}
-if(1==option_s)
-{
-   if(is_file_different(file_1,file_2))
-        printf("same");
-}
-if(1==option_w)
-{
-   file_1=str_ignore_blank(file_1);
-   file_2=str_ignore_blank(file_2);
-}
+    if(1==option_i)
+    {
+        file_1 = to_lower_case(file_1);
+        file_2 = to_lower_case(file_2);
+    }
+    if(1==option_q)
+    {
+        if(1==is_file_different(file_1,file_2))
+            printf("different");
+    }
+    if(1==option_s)
+    {
+        if(is_file_different(file_1,file_2))
+            printf("same");
+    }
+    if(1==option_w)
+    {
+        file_1=ignore_blank(file_1);
+        file_2=ignore_blank(file_2);
+    }
 
+    if(0 == option_s && 0==option_q)
+    {
 
- free(file_1);
- free(file_2);
- return 0;
+        int max_nb_line;
+        if(file_1->nb_line<file_2->nb_line)
+            max_nb_line = file_2->nb_line;
+        else
+            max_nb_line = file_1->nb_line;
+
+        for(i=0; i<max_nb_line; i++)
+        {
+            int j;
+            for(j=0; j<file_2->nb_line; j++)
+            {
+                char * line1;
+                if(i<=max_nb_line) //si le nombre de ligne du fichier 1 est moins important que dans le fichier 2
+                {
+                    char * line1 = (char *)malloc(sizeof(char)*file_1->size_line[i]);
+                    line1 = get_line(file_1,i);
+                }
+                else
+                    line1 ="";//pour ne pas avoir de line1 pas initialisé si le fichier 1 contient moins de ligne que le 2
+                char * line2 = (char *)malloc(sizeof(char)*file_2->size_line[j]);
+                line2 = get_line(file_2,j);
+                if(strcmp(line1,line2)==0)
+                {
+                    printf("= %s\n", line1);
+                }
+                if(strcmp(line1,line2))
+                {
+                    if(strcmp(line1,"")!=0)
+                        printf("< %s\n", line1);
+                    printf("> %s\n", line2);
+                }
+                free(line1);
+                free(line2);
+            }
+        }
+    }
+    free(file_1);
+    free(file_2);
+    return 0;
 }

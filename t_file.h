@@ -16,7 +16,8 @@ t_file * to_lower_case(t_file* file);
 
 int is_file_different(t_file * file1, t_file * file2);
 
-t_file * str_ignore_blank(t_file * file);
+t_file * ignore_blank(t_file * file);
+
 /*
 
 TO DO

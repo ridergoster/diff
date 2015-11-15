@@ -164,7 +164,7 @@ int is_file_different(t_file * file1, t_file * file2)
 return 0;
 }
 
-t_file* str_ignore_blank(t_file * file)
+t_file* ignore_blank(t_file * file)
 {
     t_file* new_file;
     if (file != NULL)
