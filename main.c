@@ -66,9 +66,6 @@ int main(int argc, char** argv)
         }
     }
 
-    // Print the two index for debug
-    printf("index file 1 : %d index file 2 : %d\n",index_file_1,index_file_2 );
-
     // We create the two file to compare
     t_file* file_1 = file_create(argv[index_file_1]);
     t_file* file_2 = file_create(argv[index_file_2]);
@@ -100,7 +97,7 @@ int main(int argc, char** argv)
 
     /*
 
-    A REVOIR 
+    A REVOIR
 
     if(0 == option_s && 0==option_q)
     {
@@ -143,8 +140,7 @@ int main(int argc, char** argv)
 
     */
 
-    file_print(file_1);
-    file_print(file_2);
+    file_compare(file_1,file_2);
     free(file_1);
     free(file_2);
     return 0;

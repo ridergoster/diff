@@ -1,0 +1,18 @@
+if(strcmp(get_line(file_2,j),get_line(file_1,i)) == 0){
+
+  if(change == 0 && )
+
+  if(j == k){
+
+  }
+  // egalite au même indice ! on est content
+  if(i == j){
+    i = k+1;
+  }
+  printf("COMPARSE !\n");
+  bad_line = 0;
+  break;
+}
+else{
+  l++;
+}
