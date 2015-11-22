@@ -19,3 +19,4 @@ int is_file_different(t_file * file1, t_file * file2);
 t_file * ignore_blank(t_file * file);
 
 int file_compare(t_file* file_1, t_file* file_2);
+int file_compare2(t_file* file_1, t_file* file_2);

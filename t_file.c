@@ -101,7 +101,6 @@ void file_print(t_file* file)
 {
     //init variable
     int i = 0;
-    int j = 0;
     printf("\n------- PRINT FILE -------\n\n");
     //Print each line
     for(; i < file->nb_line; i++)
@@ -352,4 +351,57 @@ int file_compare(t_file* file_1, t_file* file_2){
 
   }
   return 0;
+}
+
+int file_compare2(t_file* file_1, t_file* file_2)
+{
+
+	int i;
+	int j = 0;
+	for (i=0; i< file_1->nb_line; i++)
+	{
+		
+		int found = 0;
+		int skipped = 0;
+		while (j< file_2->nb_line && found == 0)
+		{
+			// Compare both lines
+			if(strcmp(get_line(file_1,i),get_line(file_2,j)) == 0)
+			{
+				found = 1;
+			}
+			else
+			{
+			    skipped++;
+			}
+			j++;
+		}
+		if (found == 1)
+		{
+			int a;
+			for (a=j-skipped;a<j;a++)
+			{
+				printf("> %s\n", get_line(file_1,a));
+			}
+            //Print the matched line
+			printf("= %s\n", get_line(file_1,i));
+        }
+		else
+		{
+			printf("< %s\n", get_line(file_1,i));
+			j = j-skipped;
+
+		}
+	}
+	//pprint all line if file 2 have more lines thant file1
+	if(file_2->nb_line>file_2->nb_line)
+	{
+        while (j < file_2->nb_line)
+        {
+            printf("> %s\n", get_line(file_2,i));
+            j++;
+        }
+	}
+
+return 1;
 }
