@@ -93,6 +93,10 @@ static void usage ()
                     printf ("  %s\n", *p);
 }
 
+static void version() {
+    printf("\n version: v0alpha \n");
+}
+
 
 int main(int argc, char** argv)
 {
@@ -124,6 +128,10 @@ int main(int argc, char** argv)
           {
                 option_h = 1;
           }
+          if(strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0)
+          {
+                option_v = 1;
+          }
           // if param is ignore space
           if(strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "--ignore-all-space") == 0)
           {
@@ -153,9 +161,13 @@ int main(int argc, char** argv)
     }
 
     // We create the two file to compare
-    // +20151123 fgn except for --help
-    if (option_h || option_v) {
+    // +20151123 fgn except for --help & -h & -v
+    if (option_h) {
         usage();
+        version();
+        return 0;
+    } else if (option_v) {
+        version();
         return 0;
     } else if(argc < 3) {
         printf("/!\\ ERROR /!\\ \n ");
