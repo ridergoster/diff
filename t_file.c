@@ -96,7 +96,7 @@ t_file* file_create(char* file_name)
     return file;
 }
 
-void get_lcs(t_file* file_1, t_file* file_2){
+t_file* get_lcs(t_file* file_1, t_file* file_2){
     // 1 On initialise la matrice pour trouver le LCS
     int size_x = file_1->nb_line;
     int size_y = file_2->nb_line;
@@ -104,53 +104,88 @@ void get_lcs(t_file* file_1, t_file* file_2){
     int j;
     int lcs_matrix[size_x+1][size_y+1];
 
-    printf("\nINITIALIZE LCS MATRIX ON ZERO\n-------------------------\n");
+    // printf("\nINITIALIZE LCS MATRIX ON ZERO\n-------------------------\n");
 
     for(i=0 ; i <= size_x ; i++){
       for (j = 0; j <= size_y; j++) {
         lcs_matrix[i][j] = 0;
-        printf("%d ",lcs_matrix[i][j]);
+        // printf("%d ",lcs_matrix[i][j]);
       }
-      printf("\n");
+      // printf("\n");
     }
-    printf("-------------------------\nEND OF INITIALIZE\n\n");
-
-
-    printf("GET THE LCS MATRIX OPERATE\n-------------------------\n");
-
-    for(j = 0; j <= size_y ; j++) {
-      printf("%d ",lcs_matrix[0][j]);
-    }
-
+    // printf("-------------------------\nEND OF INITIALIZE\n\n");
+    //
+    //
+    // printf("GET THE LCS MATRIX OPERATE\n-------------------------\n");
+    //
+    // for(j = 0; j <= size_y ; j++) {
+    //   printf("%d ",lcs_matrix[0][j]);
+    // }
+    //
     // 2 On calcule la matrice pour le LCS
     for(i = 1 ; i <= size_x ; i++){
 
-      printf("\n%d ",lcs_matrix[i][0]);
+      // printf("\n%d ",lcs_matrix[i][0]);
 
       for(j = 1 ; j <= size_y ; j++){
         if(strcmp(get_line(file_1,i-1),get_line(file_2,j-1)) == 0){
           lcs_matrix[i][j] = (lcs_matrix[i-1][j-1]) + 1;
-          printf("%d ",lcs_matrix[i][j]);
+          // printf("%d ",lcs_matrix[i][j]);
         }
         else if(lcs_matrix[i][j-1] > lcs_matrix[i-1][j]){
 
           lcs_matrix[i][j] = lcs_matrix[i][j-1];
-          printf("%d ",lcs_matrix[i][j]);
+          // printf("%d ",lcs_matrix[i][j]);
         }
         else{
           lcs_matrix[i][j] = lcs_matrix[i-1][j];
-          printf("%d ",lcs_matrix[i][j]);
+          // printf("%d ",lcs_matrix[i][j]);
         }
       }
     }
-    printf("\n-------------------------\nEND OF LCS\n\n");
+    // printf("\n-------------------------\nEND OF LCS\n\n");
+    // printf("i:%d j:%d szmax:%d\n",i,j,lcs_matrix[i-1][j-1]);
+    int size = lcs_matrix[i-1][j-1];
+    int k = size - 1;
+    int prc[k];
+    for(i = i-1 ; i > 0 ; i--){
+
+      for(j = j-1 ; j > 0 ; j--){
+        if(lcs_matrix[i][j] == lcs_matrix[i-1][j]){
+          j++;
+          break;
+        }
+        else if(lcs_matrix[i][j] == lcs_matrix[i][j-1]){
+          continue;
+        }
+        else{
+          prc[k--] = i-1;
+          break;
+        }
+      }
+    }
+    char** lcs_string = calloc(size, sizeof(char*));
+
+    for(i=0 ; i < size ; i++){
+      char* lcs_line = calloc(file_1->size_line[prc[i]]*size, sizeof(char));
+      lcs_string[i] = get_line(file_1,prc[i]);
+    }
+    t_file* lcs = (t_file*)malloc(sizeof(t_file));
+    lcs->lines = lcs_string;
+    lcs->nb_line = size;
+    //
+    // printf("HELLO && size = %d\n",size);
+    // for(i = 0 ; i < size ; i++)
+    //   printf("%d: %s",i,lcs->lines[i]);
+
+    return lcs;
 }
 //Print the t_file
 void file_print(t_file* file)
 {
     //init variable
     int i = 0;
-    printf("\n------- PRINT FILE -------\n\n");
+    printf("\n------- PRINT FILE -------\n");
     //Print each line
     for(; i < file->nb_line; i++)
     {
@@ -239,218 +274,126 @@ char* get_line(t_file* file,int index)
     return file->lines[index];
 }
 
-void print_line_file(t_file* file, int nbfile, int start, int end){
-  char file_sign = (nbfile==1)?'<':'>';
+void print_line_file(t_file* file, int num_file, int start, int end){
+  char file_sign = (num_file==1)?'<':'>';
   int i;
   for(i = start; i < end ; i++){
     printf("%c ",file_sign);
     printf("%s",get_line(file,i));
   }
 }
+
 //Comparse two file
 int file_compare(t_file* file_1, t_file* file_2){
 
-  int i = 0;
-  int j = 0;
-  int k = 0;
-  int l = 0;
-  int bad_line = 0;
-  int change = 0;
-  for(i = 0 ; i < file_2->nb_line ; i++){
+  t_file* lcs = get_lcs(file_1, file_2);
+  int index_lcs = 0;
+  int index_lcs_1 = 0;
+  int index_lcs_2 = 0;
+  int index_file_1 = 0;
+  int index_file_2 = 0;
 
-    for(j = k ; j < file_1->nb_line ; j++){
-  //Ò  printf("i:%d j:%d k:%d\n",i,j,k);
+  for(index_lcs = 0 ; index_lcs < lcs->nb_line ; index_lcs++)
+  {
 
-      if(strcmp(get_line(file_2,i),get_line(file_1,j)) == 0){
-      //  printf("finder\n");
-        // Aucune erreur avant- on est donc bien parti ! ouf
-        if(l == 0){
-          k = j+1;
-        }
+    char * line_1 = get_line(file_1,index_file_1);
+    char * line_2 = get_line(file_2,index_file_2);
+    char * line_lcs = get_line(lcs,index_lcs);
 
-        // i == j hmm... On est au même indice des 2 cotés, mais il faut pas être comme k !
-        else if(i == j && j != k){
-          if(bad_line < 2){
-            printf("%dc%d\n",j,i);
-            print_line_file(file_1,1,j-1,j);
-            printf("---\n");
-            print_line_file(file_2,2,i-1,i);
-          }
-          else{
-            printf("%d,%dc%d,%d\n",j-bad_line,j,i-bad_line,i);
-            print_line_file(file_1,1,j-bad_line-1,j);
-            printf("---\n");
-            print_line_file(file_2,2,i-bad_line-1,i);
-          }
-          k = j+1;
-          l = 0;
-        }
-
-        else if(i == j && j == k){
-          printf("%da%d,%d\n",j,i-bad_line+1,i);
-          print_line_file(file_2,2,i-bad_line,i);
-          k = j+1;
-          l = 0;
-        }
-        // i == 0 ca alors on est au début du fichier !
-        else if(i == 0){
-
-          if(j > 1){
-            printf("1,%dd0\n",j);
-            print_line_file(file_1,1,0,j);
-          }
-          else{
-            printf("1d0\n");
-            print_line_file(file_1,1,0,1);
-          }
-
-          k = j+1;
-          l = 0;
-        }
-
-        // On est plus au début... Mais k y est toujours... Bizarre !
-        else if(i > 0 && k == 0){
-          if(j > i){
-            printf("%d,%dc%d,%d\n",j-i,j,1,i);
-            print_line_file(file_1,1,j-i-1,j);
-            printf("---\n");
-            print_line_file(file_2,2,0,i);
-          }
-          else if(i > 1){
-            printf("0a1,%d\n",i);
-            print_line_file(file_2,2,0,i);
-          }
-          else{
-            printf("0a1\n");
-            print_line_file(file_2,2,0,1);
-          }
-
-          k = j+1;
-          l = 0;
-        }
-
-        // j est au même endroit que k ?!
-        else if (j == k && bad_line == 0){
-
-          printf("%da%d,%d\n",j,i-bad_line,i);
-          print_line_file(file_2,2,i-bad_line-1,i);
-          k = j+1;
-          l = 0;
-        }
-        else if (j == k){
-          if(bad_line > 1){
-
-          }
-          else{
-
-            printf("%dc%d,%d\n",j,i-bad_line,i);
-            print_line_file(file_2,2,i-bad_line-1,i);
-
-          }
-          // printf("%da%d,%d\n",j,i-bad_line,i);
-          // print_line_file(file_2,2,i-bad_line,i);
-          k = j+1;
-          l = 0;
-        }
-
-        else if(i == k){
-
-          if(bad_line >= 1){
-            if(bad_line == 1){
-              printf("%d,%dc%d\n",j-bad_line,j,i);
-              print_line_file(file_1,1,j-bad_line-1,j);
-              printf("---\n");
-              print_line_file(file_2,2,i-1,i);
-            }
-            else{
-              printf("%d,%dc%d,%d\n",j-bad_line,j,i-bad_line,i);
-              print_line_file(file_1,1,j-bad_line-1,j);
-              printf("---\n");
-              print_line_file(file_2,2,i-bad_line-1,i);
-            }
-          }
-          else{
-            printf("%dd%d\n",j,i);
-            print_line_file(file_1,1,j-1,j);
-          }
-
-          k = j+1;
-          l = 0;
-        }
-
-        else if(bad_line > 0){
-          printf("%d,%dc%d,%d\n",k+1,j,k,i);
-          print_line_file(file_1,1,k,j);
-          printf("---\n");
-          print_line_file(file_2,2,k-1,i);
-        }
-        // Finito... OUF !
-        bad_line = 0;
-        break;
+    index_lcs_1 = index_file_1;
+    index_lcs_2 = index_file_2;
+    // Fichier 1 egal à lcs, mais pas Fichier 2 : on ajoute
+    if(strcmp(line_1,line_lcs) == 0 && strcmp(line_2,line_lcs) != 0)
+    {
+      while(strcmp(line_2,line_lcs) != 0){
+        index_lcs_2++;
+        line_2 = get_line(file_2,index_lcs_2);
       }
-      else{
-        // Mince... Pas identique :/
-        l++;
-      }
-    }
-    if(l > 0){
-      bad_line++;
-    //  printf("pas de ligne trouvé... bd:%d\n",bad_line);
+      if(index_lcs_2 == index_file_2+1)
+        printf("%da%d\n",index_file_1,index_lcs_2);
+      else
+        printf("%da%d,%d\n",index_file_1,index_file_2+1,index_lcs_2);
+      print_line_file(file_2,2,index_file_2,index_lcs_2);
     }
 
+    // Fichier 2 egal à lcs, mais pas Fichier 1 : on supprime
+    else if(strcmp(line_1,line_lcs) != 0 && strcmp(line_2,line_lcs) == 0)
+    {
+      while(strcmp(line_1,line_lcs) != 0){
+        index_lcs_1++;
+        line_1 = get_line(file_1,index_lcs_1);
+      }
+
+      if(index_lcs_1 == index_file_1+1)
+        printf("%dd%d\n",index_lcs_1,index_file_2);
+      else
+        printf("%d,%dd%d\n",index_file_1+1,index_lcs_1,index_file_2);
+      print_line_file(file_1,1,index_file_1,index_lcs_1);
+    }
+
+    // Fichier 1 et 2 différent de lcs : on échange
+    else if(strcmp(line_1,line_lcs) != 0 && strcmp(line_2,line_lcs) != 0)
+    {
+      while(strcmp(line_1,line_lcs) != 0){
+        index_lcs_1++;
+        line_1 = get_line(file_1,index_lcs_1);
+      }
+      while(strcmp(line_2,line_lcs) != 0){
+        index_lcs_2++;
+        line_2 = get_line(file_2,index_lcs_2);
+      }
+      if(index_lcs_1 == index_file_1+1 && index_lcs_2 == index_file_2+1)
+        printf("%dc%d\n",index_lcs_1,index_lcs_2);
+      else if (index_lcs_1 == index_file_1+1)
+        printf("%dc%d,%d\n",index_lcs_1,index_file_2+1,index_lcs_2);
+      else if (index_lcs_2 == index_file_2+1)
+        printf("%d,%dc%d\n",index_file_1+1,index_lcs_1,index_lcs_2);
+      else
+        printf("%d,%dc%d,%d\n",index_file_1+1,index_lcs_1,index_file_2+1,index_lcs_2);
+      print_line_file(file_1,1,index_file_1,index_lcs_1);
+      printf("---\n");
+      print_line_file(file_2,2,index_file_2,index_lcs_2);
+    }
+    // Fichier 1 et Fichier 2 sont egal à lcs : On a rien à faire ! good
+    //On ajoute l'index lcs et on passe au suivant
+    index_file_1 = index_lcs_1+1;
+    index_file_2 = index_lcs_2+1;
+  }
+  // Il peut rester des lignes après le LCS
+  //Si on est à la fin des deux fichier. C'est fini !
+  if(index_file_2 > file_2->nb_line-1 && index_file_1 > file_1->nb_line-1){
+    return 0;
+  }
+  // Si fichier 2 est fini mais pas fichier 1 : on supprime
+  else if(index_file_2 > file_2->nb_line-1){
+    if(index_file_1 == file_1->nb_line-1)
+      printf("%dd%d\n",index_file_1+1,index_file_2);
+    else
+      printf("%d,%dd%d\n",index_file_1+1,file_1->nb_line,index_file_2);
+    print_line_file(file_1,1,index_file_1,file_1->nb_line);
+  }
+  // Si fichier 1 est fini mais pas fichier 2 : on ajoute
+  else if(index_file_1 > file_1->nb_line-1){
+    if(index_file_2 == file_2->nb_line-1)
+      printf("%dd%d\n",index_file_1,index_file_2+1);
+    else
+      printf("%d,%dd%d\n",index_file_1,index_file_2+1,file_2->nb_line);
+    print_line_file(file_2,2,index_file_2,file_2->nb_line);
+  }
+  // Les deux fichier sont pas fini. On échange tout ce qui reste
+  else
+  {
+    if(index_file_2 == file_2->nb_line-1 && index_file_1 == file_1->nb_line-1)
+      printf("%dc%d\n",index_file_1+1,index_file_2+1);
+    else if (index_file_1 == file_1->nb_line-1)
+      printf("%dc%d,%d\n",index_file_1+1,index_file_2+1,file_2->nb_line);
+    else if (index_file_2 == file_2->nb_line-1)
+      printf("%d,%dc%d\n",index_file_1+1,file_1->nb_line-1,index_file_2+1);
+    else
+      printf("%d,%dc%d,%d\n",index_file_1+1,file_1->nb_line,index_file_2+1,file_2->nb_line);
+    print_line_file(file_1,1,index_file_1,file_1->nb_line);
+    printf("---\n");
+    print_line_file(file_2,2,index_file_2,file_2->nb_line);
   }
   return 0;
-}
-
-int file_compare2(t_file* file_1, t_file* file_2)
-{
-
-	int i;
-	int j = 0;
-	for (i=0; i< file_1->nb_line; i++)
-	{
-
-		int found = 0;
-		int skipped = 0;
-		while (j< file_2->nb_line && found == 0)
-		{
-			// Compare both lines
-			if(strcmp(get_line(file_1,i),get_line(file_2,j)) == 0)
-			{
-				found = 1;
-			}
-			else
-			{
-			    skipped++;
-			}
-			j++;
-		}
-		if (found == 1)
-		{
-			int a;
-			for (a=j-skipped;a<j;a++)
-			{
-				printf("> %s\n", get_line(file_1,a));
-			}
-            //Print the matched line
-			printf("= %s\n", get_line(file_1,i));
-        }
-		else
-		{
-			printf("< %s\n", get_line(file_1,i));
-			j = j-skipped;
-
-		}
-	}
-	//pprint all line if file 2 have more lines thant file1
-	if(file_2->nb_line>file_2->nb_line)
-	{
-        while (j < file_2->nb_line)
-        {
-            printf("> %s\n", get_line(file_2,i));
-            j++;
-        }
-	}
-
-return 1;
 }

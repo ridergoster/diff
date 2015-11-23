@@ -249,6 +249,7 @@ int main(int argc, char** argv)
     //printf("size 1:%d size 2:%d \n",file_1->nb_line,file_2->nb_line );
     //get_lcs(file_1,file_2);
     file_compare(file_1,file_2);
+    //file_print(file_1);
     free(file_1);
     free(file_2);
     return 0;
