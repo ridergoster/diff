@@ -30,7 +30,7 @@ t_file* file_create(char* file_name)
         }
 
         // alloc the number of line
-        file->size_line = (int*)malloc(sizeof(int)*nb_line);
+        file->size_line = calloc(nb_line,sizeof(int));
 
         // Initialize the number of line in t_file
         file->nb_line = nb_line;
@@ -59,13 +59,13 @@ t_file* file_create(char* file_name)
         }
 
         // Alloc the number of line in the lines object
-        char** lines = (char **)malloc(sizeof(char*)*(nb_line+1));
+        char** lines = calloc((nb_line+1),sizeof(char*));
 
         int i;
         // Alloc each line in the lines object
         for(i = 0 ; i < nb_line+1 ; i++)
         {
-            char* line = (char *)malloc(sizeof(char)*file->size_line[i]*(nb_line+1));
+            char* line = calloc(file->size_line[i]*(nb_line+1),sizeof(char));
             lines[i] = &line[i*file->size_line[i]];
         }
 
@@ -96,6 +96,55 @@ t_file* file_create(char* file_name)
     return file;
 }
 
+void get_lcs(t_file* file_1, t_file* file_2){
+    // 1 On initialise la matrice pour trouver le LCS
+    int size_x = file_1->nb_line;
+    int size_y = file_2->nb_line;
+    int i;
+    int j;
+    int lcs_matrix[size_x+1][size_y+1];
+
+    printf("\nINITIALIZE LCS MATRIX ON ZERO\n-------------------------\n");
+
+    for(i=0 ; i <= size_x ; i++){
+      for (j = 0; j <= size_y; j++) {
+        lcs_matrix[i][j] = 0;
+        printf("%d ",lcs_matrix[i][j]);
+      }
+      printf("\n");
+    }
+    printf("-------------------------\nEND OF INITIALIZE\n\n");
+
+
+    printf("GET THE LCS MATRIX OPERATE\n-------------------------\n");
+
+    for(j = 0; j <= size_y ; j++) {
+      printf("%d ",lcs_matrix[0][j]);
+    }
+
+    // 2 On calcule la matrice pour le LCS
+    for(i = 1 ; i <= size_x ; i++){
+
+      printf("\n%d ",lcs_matrix[i][0]);
+
+      for(j = 1 ; j <= size_y ; j++){
+        if(strcmp(get_line(file_1,i-1),get_line(file_2,j-1)) == 0){
+          lcs_matrix[i][j] = (lcs_matrix[i-1][j-1]) + 1;
+          printf("%d ",lcs_matrix[i][j]);
+        }
+        else if(lcs_matrix[i][j-1] > lcs_matrix[i-1][j]){
+
+          lcs_matrix[i][j] = lcs_matrix[i][j-1];
+          printf("%d ",lcs_matrix[i][j]);
+        }
+        else{
+          lcs_matrix[i][j] = lcs_matrix[i-1][j];
+          printf("%d ",lcs_matrix[i][j]);
+        }
+      }
+    }
+    printf("\n-------------------------\nEND OF LCS\n\n");
+}
 //Print the t_file
 void file_print(t_file* file)
 {
@@ -360,7 +409,7 @@ int file_compare2(t_file* file_1, t_file* file_2)
 	int j = 0;
 	for (i=0; i< file_1->nb_line; i++)
 	{
-		
+
 		int found = 0;
 		int skipped = 0;
 		while (j< file_2->nb_line && found == 0)

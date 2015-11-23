@@ -20,6 +20,8 @@ int main(int argc, char** argv)
     int option_s=0; //report identical file
     int option_i=0; //ignore different case
     int option_w=0; // ignore all space
+    int option_h=0; // show help
+    int option_v=0; // show version
 
     //Get the option of function
     for(i = 1 ; i < argc ; i++)
@@ -139,7 +141,8 @@ int main(int argc, char** argv)
     }
 
     */
-
+    //printf("size 1:%d size 2:%d \n",file_1->nb_line,file_2->nb_line );
+    //get_lcs(file_1,file_2);
     file_compare(file_1,file_2);
     free(file_1);
     free(file_2);
