@@ -76,24 +76,26 @@ End ManPage */
 
 static void usage ()
 {
-  static char const * const option_help[] = {
-                "-q  --brief  Output only whether files differ.",
-                "-s  --report-identical-files  Report when two files are the same.",
-                "-i  --ignore-case  Consider upper- and lower-case to be the same.",
-                "-w  --ignore-all-space  Ignore all white space.",
-                "--help  Output this help.",
-                "-v  --version  Output version info.",
-                0
-                };
+    static char const * const option_help[] =
+    {
+        "-q  --brief  Output only whether files differ.",
+        "-s  --report-identical-files  Report when two files are the same.",
+        "-i  --ignore-case  Consider upper- and lower-case to be the same.",
+        "-w  --ignore-all-space  Ignore all white space.",
+        "--help  Output this help.",
+        "-v  --version  Output version info.",
+        0
+    };
 
-                char const * const *p = option_help;
+    char const * const *p = option_help;
 
-                printf ("Usage: %s [OPTION]... FILE1 FILE2\n\n", "diff");
-                for (p = option_help;  *p;  p++)
-                    printf ("  %s\n", *p);
+    printf ("Usage: %s [OPTION]... FILE1 FILE2\n\n", "diff");
+    for (p = option_help;  *p;  p++)
+        printf ("  %s\n", *p);
 }
 
-static void version() {
+static void version()
+{
     printf("\n version: v0alpha \n");
 }
 
@@ -118,35 +120,35 @@ int main(int argc, char** argv)
         //Param is an option
         if(argv[i][0] == '-')
         {
-          // if param is ignore case
-          if(strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--ignore-case") == 0)
-          {
-              option_i = 1;
-          }
-          // if param is man help
-          if(strcmp(argv[i], "--help") == 0)
-          {
+            // if param is ignore case
+            if(strcmp(argv[i], "-i") == 0 || strcmp(argv[i], "--ignore-case") == 0)
+            {
+                option_i = 1;
+            }
+            // if param is man help
+            if(strcmp(argv[i], "--help") == 0)
+            {
                 option_h = 1;
-          }
-          if(strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0)
-          {
+            }
+            if(strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0)
+            {
                 option_v = 1;
-          }
-          // if param is ignore space
-          if(strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "--ignore-all-space") == 0)
-          {
-              option_w = 1;
-          }
-          // if param is report same file
-          if(strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--report-identical-files") == 0)
-          {
-              option_s = 1;
-          }
-          // if param is report brief result
-          if(strcmp(argv[i], "-q") == 0  || strcmp(argv[i], "--brief") == 0)
-          {
-              option_q = 1;
-          }
+            }
+            // if param is ignore space
+            if(strcmp(argv[i], "-w") == 0 || strcmp(argv[i], "--ignore-all-space") == 0)
+            {
+                option_w = 1;
+            }
+            // if param is report same file
+            if(strcmp(argv[i], "-s") == 0 || strcmp(argv[i], "--report-identical-files") == 0)
+            {
+                option_s = 1;
+            }
+            // if param is report brief result
+            if(strcmp(argv[i], "-q") == 0  || strcmp(argv[i], "--brief") == 0)
+            {
+                option_q = 1;
+            }
         }
         // Get the index of file 2
         else if(index_file_1 != 0)
@@ -162,14 +164,19 @@ int main(int argc, char** argv)
 
     // We create the two file to compare
     // +20151123 fgn except for --help & -h & -v
-    if (option_h) {
+    if (option_h)
+    {
         usage();
         version();
         return 0;
-    } else if (option_v) {
+    }
+    else if (option_v)
+    {
         version();
         return 0;
-    } else if(argc < 3) {
+    }
+    else if(argc < 3)
+    {
         printf("/!\\ ERROR /!\\ \n ");
         usage();
         return 1;
@@ -202,54 +209,14 @@ int main(int argc, char** argv)
     }
 
 
-    /*
-
-    A REVOIR
-
     if(0 == option_s && 0==option_q)
     {
-
-        int max_nb_line;
-        if(file_1->nb_line<file_2->nb_line)
-            max_nb_line = file_2->nb_line;
-        else
-            max_nb_line = file_1->nb_line;
-
-        for(i=0; i<max_nb_line; i++)
-        {
-            for(j=0; j<file_2->nb_line; j++)
-            {
-                char * line1;
-                if(i<=max_nb_line) //si le nombre de ligne du fichier 1 est moins important que dans le fichier 2
-                {
-                    char * line1 = (char *)malloc(sizeof(char)*file_1->size_line[i]);
-                    line1 = get_line(file_1,i);
-                }
-                else
-                    line1 ="";//pour ne pas avoir de line1 pas initialis� si le fichier 1 contient moins de ligne que le 2
-                char * line2 = (char *)malloc(sizeof(char)*file_2->size_line[j]);
-                line2 = get_line(file_2,j);
-                if(strcmp(line1,line2)==0)
-                {
-                    printf("= %s\n", line1);
-                }
-                if(strcmp(line1,line2))
-                {
-                    if(strcmp(line1,"")!=0)
-                        printf("< %s\n", line1);
-                    printf("> %s\n", line2);
-                }
-                //free(line1);
-                //free(line2);
-            }
-        }
+        //printf("size 1:%d size 2:%d \n",file_1->nb_line,file_2->nb_line );
+        //get_lcs(file_1,file_2);
+        file_compare(file_1,file_2);
+        //file_print(file_1);
     }
 
-    */
-    //printf("size 1:%d size 2:%d \n",file_1->nb_line,file_2->nb_line );
-    //get_lcs(file_1,file_2);
-    file_compare(file_1,file_2);
-    //file_print(file_1);
     free(file_1);
     free(file_2);
     return 0;
