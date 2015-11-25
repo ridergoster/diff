@@ -380,7 +380,7 @@ int file_compare(t_file* file_1, t_file* file_2)
             else
                 printf("%d,%dc%d,%d\n",index_file_1+1,index_lcs_1,index_file_2+1,index_lcs_2);
             print_line_file(file_1,1,index_file_1,index_lcs_1);
-            printf("\n---\n");
+            printf("---\n");
             print_line_file(file_2,2,index_file_2,index_lcs_2);
         }
         // Fichier 1 et Fichier 2 sont egal à lcs : On a rien à faire ! good
@@ -424,7 +424,7 @@ int file_compare(t_file* file_1, t_file* file_2)
         else
             printf("%d,%dc%d,%d\n",index_file_1+1,file_1->nb_line,index_file_2+1,file_2->nb_line);
         print_line_file(file_1,1,index_file_1,file_1->nb_line);
-        printf("\n---\n");
+        printf("---\n");
         print_line_file(file_2,2,index_file_2,file_2->nb_line);
     }
     return 0;
@@ -440,28 +440,24 @@ t_file* str_onespace(t_file* file)
         new_file = file;
         if (new_file != NULL)
         {
-            int y=0;
+            int y;
             for(i=0; i < file->nb_line; i++)
             {
+                y = 0;
                 for (j=0; j< file->size_line[i]; j++)
                 {
-                    if(file->lines[i][j]!='\n')
+                    if (file->lines[i][j] == 32 && space == 0)
                     {
-                        if(file->lines[i][j]==' ') // if the car is a space
-                        {
-                            if (space == 0)
-                            {
-                                new_file->lines[i][y]=file->lines[i][j];
-                                space = 1;
-                                y++;
-                            }
-                        }
-                        else
-                        {
-                            new_file->lines[i][y] = file->lines[i][j];
-                            space = 0;
-                            y++;
-                        }
+                        new_file->lines[i][y] = file->lines[i][j];
+                        y++;
+                        space = 1;
+                    } else if (file->lines[i][j] == 32 && space == 1) {
+                        continue;
+                    } else {
+                        // si caractere non espace ou space egal 1
+                        new_file->lines[i][y] = file->lines[i][j];
+                        y++;
+                        space = 0;
                     }
                 }
                 new_file->lines[i][y] = '\0';
@@ -487,25 +483,18 @@ t_file* str_onetab(t_file* file)
             {
                 for (j=0; j< file->size_line[i]; j++)
                 {
-
-                    if(file->lines[i][j]!='\n')
+                    if (file->lines[i][j] == 9 && space == 0)
                     {
-                        if(file->lines[i][j]=='\t') // if the car is a tabulation
-                        {
-                            if (space == 0)
-                            {
-                                new_file->lines[i][y]=file->lines[i][j];
-                                space = 1;
-                                y++;
-                            }
-                        }
-                        else
-                        {
-                            new_file->lines[i][y] = file->lines[i][j];
-                            space = 0;
-                            y++;
-                        }
-
+                        new_file->lines[i][y] = file->lines[i][j];
+                        y++;
+                        space = 1;
+                    } else if (file->lines[i][j] == 9 && space == 1) {
+                        continue;
+                    } else {
+                        // si caractere non espace ou space egal 1
+                        new_file->lines[i][y] = file->lines[i][j];
+                        y++;
+                        space = 0;
                     }
                 }
                 new_file->lines[i][y] = '\0';
