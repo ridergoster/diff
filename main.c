@@ -106,14 +106,14 @@ int main(int argc, char** argv)
     int index_file_1 = 0;
     int index_file_2 = 2;
     int i = 0;
-    int j = 0;
     int option_q=0; //report if diff
     int option_s=0; //report identical file
     int option_i=0; //ignore different case
     int option_w=0; // ignore all space
     int option_h=0; // show help
     int option_v=0; // show version
-
+    int option_b=0; //
+    int option_E=0;
     //Get the option of function
     for(i = 1 ; i < argc ; i++)
     {
@@ -149,6 +149,15 @@ int main(int argc, char** argv)
             {
                 option_q = 1;
             }
+            if(strcmp(argv[i], "-b") == 0 || strcmp(argv[i], "--ignore-space-change") == 0)
+			{
+				option_b = 1;
+			}
+			if(strcmp(argv[i], "-E") == 0 || strcmp(argv[i], "--ignore-tab-expansion") == 0)
+			{
+				option_E = 1;
+			}
+
         }
         // Get the index of file 2
         else if(index_file_1 != 0)
@@ -187,10 +196,8 @@ int main(int argc, char** argv)
     // We do modification on file depending of option
     if(1==option_i)
     {
-        printf("we lower\n");
         file_1 = to_lower_case(file_1);
         file_2 = to_lower_case(file_2);
-
     }
     if(1==option_q)
     {
@@ -207,7 +214,17 @@ int main(int argc, char** argv)
         file_1=ignore_blank(file_1);
         file_2=ignore_blank(file_2);
     }
-
+    if(1==option_b)
+    {
+        file_1=str_onespace(file_1);
+        file_2=str_onespace(file_2);
+        //printf("hello");
+    }
+     if(1==option_E)
+    {
+        file_1=str_onetab(file_1);
+        file_2=str_onetab(file_2);
+    }
 
     if(0 == option_s && 0==option_q)
     {
