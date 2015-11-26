@@ -235,12 +235,10 @@ int is_file_different(t_file * file1, t_file * file2)
             return 1;
         //compare the number of char for a line
         int z,y;
-        for(z=0; z<file1->nb_line; z++)
-            for(y=0; file2->nb_line; y++)
-            {
-                if(file1->size_line[z]!=file2->size_line[y])
+        for(z=0; z<file1->nb_line; z++) {
+          if(file1->size_line[z]!=file2->size_line[z])
                     return 1;
-            }
+        }
 
         int i;
         for(i=0; i < file1->nb_line; i++)
