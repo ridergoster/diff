@@ -1,79 +1,10 @@
-/* ManPage Full
-
-                "-i  --ignore-case  Consider upper- and lower-case to be the same.",
-                "-w  --ignore-all-space  Ignore all white space.",
-                "-b  --ignore-space-change  Ignore changes in the amount of white space.",
-                "-B  --ignore-blank-lines  Ignore changes whose lines are all blank.",
-                "-I RE  --ignore-matching-lines=RE  Ignore changes whose lines all match RE.",
-                #if HAVE_SETMODE
-                "--binary  Read and write data in binary mode.",
-                #endif
-                "-a  --text  Treat all files as text.\n",
-                "-c  -C NUM  --context[=NUM]  Output NUM (default 2) lines of copied context.",
-                "-u  -U NUM  --unified[=NUM]  Output NUM (default 2) lines of unified context.",
-                "  -NUM  Use NUM context lines.",
-                "  -L LABEL  --label LABEL  Use LABEL instead of file name.",
-                "  -p  --show-c-function  Show which C function each change is in.",
-                "  -F RE  --show-function-line=RE  Show the most recent line matching RE.",
-                "-q  --brief  Output only whether files differ.",
-                "-e  --ed  Output an ed script.",
-                "-n  --rcs  Output an RCS format diff.",
-                "-y  --side-by-side  Output in two columns.",
-                "  -w NUM  --width=NUM  Output at most NUM (default 130) characters per line.",
-                "  --left-column  Output only the left column of common lines.",
-                "  --suppress-common-lines  Do not output common lines.",
-                "-DNAME  --ifdef=NAME  Output merged file to show `#ifdef NAME' diffs.",
-                "--GTYPE-group-format=GFMT  Similar, but format GTYPE input groups with GFMT.",
-                "--line-format=LFMT  Similar, but format all input lines with LFMT.",
-                "--LTYPE-line-format=LFMT  Similar, but format LTYPE input lines with LFMT.",
-                "  LTYPE is `old', `new', or `unchanged'.  GTYPE is LTYPE or `changed'.",
-                "  GFMT may contain:",
-                "    %<  lines from FILE1",
-                "    %>  lines from FILE2",
-                "    %=  lines common to FILE1 and FILE2",
-                "    %[-][WIDTH][.[PREC]]{doxX}LETTER  printf-style spec for LETTER",
-                "      LETTERs are as follows for new group, lower case for old group:",
-                "        F  first line number",
-                "        L  last line number",
-                "        N  number of lines = L-F+1",
-                "        E  F-1",
-                "        M  L+1",
-                "  LFMT may contain:",
-                "    %L  contents of line",
-                "    %l  contents of line, excluding any trailing newline",
-                "    %[-][WIDTH][.[PREC]]{doxX}n  printf-style spec for input line number",
-                "  Either GFMT or LFMT may contain:",
-                "    %%  %",
-                "    %c'C'  the single character C",
-                "    %c'\\OOO'  the character with octal code OOO\n",
-                "-l  --paginate  Pass the output through `pr' to paginate it.",
-                "-t  --expand-tabs  Expand tabs to spaces in output.",
-                "-T  --initial-tab  Make tabs line up by prepending a tab.\n",
-                "-r  --recursive  Recursively compare any subdirectories found.",
-                "-N  --new-file  Treat absent files as empty.",
-                "-P  --unidirectional-new-file  Treat absent first files as empty.",
-                "-s  --report-identical-files  Report when two files are the same.",
-                "-x PAT  --exclude=PAT  Exclude files that match PAT.",
-                "-X FILE  --exclude-from=FILE  Exclude files that match any pattern in FILE.",
-                "-S FILE  --starting-file=FILE  Start with FILE when comparing directories.\n",
-                "--horizon-lines=NUM  Keep NUM lines of the common prefix and suffix.",
-                "-d  --minimal  Try hard to find a smaller set of changes.",
-                "-H  --speed-large-files  Assume large files and many scattered small changes.\n",
-                "-v  --version  Output version info.",
-                "--help  Output this help.",
-                0
-                };
-
-End ManPage */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "t_file.h"
 #include <string.h>
 
 
-
+// function for help
 static void usage ()
 {
     static char const * const option_help[] =
@@ -94,30 +25,31 @@ static void usage ()
         printf ("  %s\n", *p);
 }
 
+// function for version
 static void version()
 {
     printf("\n version: v0alpha \n");
 }
 
-
+// main of the project
 int main(int argc, char** argv)
 {
     //Init variable
     int index_file_1 = 0;
     int index_file_2 = 2;
     int i = 0;
-    int option_q=0; //report if diff
+    int option_q=0; //report brief
     int option_s=0; //report identical file
     int option_i=0; //ignore different case
-    int option_w=0; // ignore all space
-    int option_h=0; // show help
-    int option_v=0; // show version
-    int option_b=0; //
-    int option_E=0;
+    int option_w=0; //ignore all space
+    int option_h=0; //show help
+    int option_v=0; //show version
+    int option_b=0; //ignore space change
+    int option_E=0; //ignore tabulation
     //Get the option of function
     for(i = 1 ; i < argc ; i++)
     {
-        //Param is an option
+        //Param is an option starting with '-'
         if(argv[i][0] == '-')
         {
             // if param is ignore case
@@ -130,6 +62,7 @@ int main(int argc, char** argv)
             {
                 option_h = 1;
             }
+            // if param is version
             if(strcmp(argv[i], "-v") == 0 || strcmp(argv[i], "--version") == 0)
             {
                 option_v = 1;
@@ -149,15 +82,16 @@ int main(int argc, char** argv)
             {
                 option_q = 1;
             }
+            // if param is ignore space change
             if(strcmp(argv[i], "-b") == 0 || strcmp(argv[i], "--ignore-space-change") == 0)
-			{
-				option_b = 1;
-			}
-			if(strcmp(argv[i], "-E") == 0 || strcmp(argv[i], "--ignore-tab-expansion") == 0)
-			{
-				option_E = 1;
-			}
-
+      			{
+      				option_b = 1;
+      			}
+            // if param is ignore tabulation
+      			if(strcmp(argv[i], "-E") == 0 || strcmp(argv[i], "--ignore-tab-expansion") == 0)
+      			{
+      				option_E = 1;
+      			}
         }
         // Get the index of file 2
         else if(index_file_1 != 0)
@@ -171,8 +105,7 @@ int main(int argc, char** argv)
         }
     }
 
-    // We create the two file to compare
-    // +20151123 fgn except for --help & -h & -v
+    // exit for --help -h -v & error in param
     if (option_h)
     {
         usage();
@@ -190,51 +123,75 @@ int main(int argc, char** argv)
         usage();
         return 1;
     }
+    // We create the two file to show
     t_file* file_1 = file_create(argv[index_file_1]);
     t_file* file_2 = file_create(argv[index_file_2]);
+
+    // We create the two file to compare
+    t_file* file_1_modif = file_create(argv[index_file_1]);
+    t_file* file_2_modif = file_create(argv[index_file_2]);
 
     // We do modification on file depending of option
     if(1==option_i)
     {
-        file_1 = to_lower_case(file_1);
-        file_2 = to_lower_case(file_2);
-    }
-    if(1==option_q)
-    {
-        if(is_file_different(file_1,file_2))
-            printf("different\n");
-    }
-    if(1==option_s)
-    {
-        if(!is_file_different(file_1,file_2))
-            printf("same\n");
+        file_1_modif = to_lower_case(file_1_modif);
+        file_2_modif = to_lower_case(file_2_modif);
     }
     if(1==option_w)
     {
-        file_1=ignore_blank(file_1);
-        file_2=ignore_blank(file_2);
+        file_1_modif=ignore_blank(file_1_modif);
+        file_2_modif=ignore_blank(file_2_modif);
     }
     if(1==option_b)
     {
-        file_1=str_onespace(file_1);
-        file_2=str_onespace(file_2);
-        //printf("hello");
+        file_1_modif=str_onespace(file_1_modif);
+        file_2_modif=str_onespace(file_2_modif);
     }
      if(1==option_E)
     {
-        file_1=str_onetab(file_1);
-        file_2=str_onetab(file_2);
+        file_1_modif=str_onetab(file_1_modif);
+        file_2_modif=str_onetab(file_2_modif);
     }
 
-    if(0 == option_s && 0==option_q)
+    // We do a boolean comparaison or a detail show
+    if(1==option_q)
     {
-        //printf("size 1:%d size 2:%d \n",file_1->nb_line,file_2->nb_line );
-        //get_lcs(file_1,file_2);
-        file_compare(file_1,file_2);
-        //file_print(file_1);
+        if(is_file_different(file_1_modif,file_2_modif))
+        {
+          printf("Files %s and %s differ\n",argv[index_file_1],argv[index_file_2]);
+          return 1;
+        }
+        else
+        {
+          return 0;
+        }
+    }
+    else if(1==option_s)
+    {
+        if(!is_file_different(file_1_modif,file_2_modif))
+        {
+          printf("Files %s and %s are identical\n",argv[index_file_1],argv[index_file_2]);
+          return 0;
+        }
+        else
+        {
+          file_compare(file_1_modif,file_2_modif,file_1,file_2);
+          return 1;
+        }
+    }
+    else
+    {
+        file_compare(file_1_modif,file_2_modif,file_1,file_2);
+        if(!is_file_different(file_1_modif,file_2_modif))
+          return 0;
+        else
+          return 1;
     }
 
     free(file_1);
     free(file_2);
-    return 0;
+    free(file_1_modif);
+    free(file_2_modif);
+
+    return 2;
 }
