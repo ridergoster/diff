@@ -92,6 +92,9 @@ t_file* file_create(char* file_name)
         // Work is done, close the file !
         fclose(f_file);
     }
+    else{
+      return NULL;
+    }
     // return the t_file created
     return file;
 }

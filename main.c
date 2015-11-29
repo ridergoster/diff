@@ -15,6 +15,8 @@ static void usage ()
         "-w  --ignore-all-space  Ignore all white space.",
         "--help  Output this help.",
         "-v  --version  Output version info.",
+        "-b  --ignore-space-change Ignore changes in the amount of white space.",
+        "-E  --ignore-tab-expansion Ignore changes due to tab expansion.",
         0
     };
 
@@ -28,7 +30,7 @@ static void usage ()
 // function for version
 static void version()
 {
-    printf("\n version: v0alpha \n");
+    printf("\nversion: v1.0 \n");
 }
 
 // main of the project
@@ -126,6 +128,16 @@ int main(int argc, char** argv)
     // We create the two file to show
     t_file* file_1 = file_create(argv[index_file_1]);
     t_file* file_2 = file_create(argv[index_file_2]);
+
+    // We check if the file exist
+    if(file_1 == NULL || file_2 == NULL)
+    {
+      if(file_1 == NULL)
+        printf("diff: %s: No such file or directory\n",argv[index_file_1]);
+      if(file_2 == NULL)
+        printf("diff: %s: No such file or directory\n",argv[index_file_2]);
+      return 2;
+    }
 
     // We create the two file to compare
     t_file* file_1_modif = file_create(argv[index_file_1]);
